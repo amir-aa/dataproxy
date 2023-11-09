@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket Options and Results</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .form-container {
+            flex: 1;
+            padding: 20px;
+        }
+        .form-container form {
+            max-width: 300px;
+            margin: auto;
+        }
+        .results-container {
+            flex: 1;
+            padding: 20px;
+        }
+        @media (max-width: 768px) {
+            .form-container, .results-container {
+                flex: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>Socket Options</h2>
+            <form id="socket-form">
+                <!-- Add socket options form elements here -->
+                <label for="source">Source:</label><br>
+                <input type="text" id="source" name="source" required><br><br>
+                <label for="host">Host:</label><br>
+                <input type="text" id="host" name="host" required><br><br>
+                <label for="port">Port:</label><br>
+                <input type="number" id="port" name="port" min="1" max="65535" required><br><br>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <div class="results-container">
+            <h2>Results</h2>
+            <div id="results">
+                <!-- This is where the results will be displayed -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add necessary JavaScript code here -->
+
+    <script>
+        document.getElementById('socket-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add your socket options setup code here
+            const host = document.getElementById('host').value;
+            const port = document.getElementById('port').value;
+            const source = document.getElementById('source').value;
+            
+            // Add your socket setup and data retrieval logic here
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `<p>Socket options submitted. Host: ${host}, Port: ${port}</p>`;
+        });
+    </script>
+</body>
+</html>

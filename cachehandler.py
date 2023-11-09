@@ -16,6 +16,7 @@ def retrieve_data_from_memcached(key):
         value = client.get(key)
         if value:
             print(f"Retrieved data from Memcached with key {key}: {value}")
+            client.delete(key)
             return value
         else:
             print(f"No data found in Memcached with key: {key}")
@@ -23,4 +24,3 @@ def retrieve_data_from_memcached(key):
     except Exception as e:
         print(f"Failed to retrieve data from Memcached: {e}")
         return None
-

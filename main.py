@@ -1,6 +1,8 @@
 import socket,base64
 import threading
 import cachehandler
+from models import sources
+from sender import sendto_destincation
 BUFFER=2048
 TCP_HOST = '0.0.0.0'
 TCP_PORT = 1212
@@ -26,14 +28,23 @@ def handle_tcp_client(client_socket, addr,indexer:UniqueIntegerGenerator):
     
     global tcp_connections
     print(f"Accepted TCP connection from {addr}")
-    while True:
-        data = client_socket.recv(BUFFER)
-        if not data:
-            break
-        #client_socket.sendall(data)
-        data=base64.b85encode(data)
-        cachehandler.insert_data_to_memcached(str(indexer.get_next_unique_integer()),data,120)
-        print(data.decode('utf-8'))
+    try:
+        leng=0
+        while True:
+            data = client_socket.recv(BUFFER)
+            leng+=1
+            if not data:
+                break
+            #client_socket.sendall(data)
+            clientdata=sources.select().where(sources.source==addr[0])[0]
+            key=f"{clientdata.identifier}_{indexer.get_next_unique_integer()}"
+            cachehandler.insert_data_to_memcached(str(key),base64.b85encode(data).decode(),120)
+            print(data)
+            destaddr,destport=str(clientdata.destination).split(":")
+            if leng==clientdata.delay:
+                sendto_destincation(clientdata.identifier,destaddr,destport)
+    except socket.timeout:
+        print(f"TimedOut for {addr}")
     client_socket.close()
     tcp_connections -= 1
 
